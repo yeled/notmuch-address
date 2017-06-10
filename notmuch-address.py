@@ -2,31 +2,39 @@ import sublime
 import sublime_plugin
 import subprocess
 
-class NotmuchaddressCommand(sublime_plugin.TextCommand):
+class PromptNotmuchAddressCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        self.window.show_input_panel("Email to search within notmuch corpus:", "", self.on_done, None, None)
 
-    def run(self, edit):
-        text = None
+    def on_done(self, text):
+        if self.window.active_view():
+            self.window.active_view().run_command("notmuch_address", {"query": text})
 
-        proc = subprocess.Popen(['/usr/local/bin/notmuch', 'address', '--deduplicate=address', 'email.com'], stdout=subprocess.PIPE, universal_newlines=True)
-        items = proc.stdout.readlines()
-        print(items)
+
+class NotmuchAddressCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit, query):
+        proc1 = subprocess.Popen(['/usr/local/bin/notmuch', 'address', '--deduplicate=address', query],
+                    stdout=subprocess.PIPE, universal_newlines=True)
+        proc2 = subprocess.Popen(['/usr/bin/grep', '-i', query], stdin=proc1.stdout,
+                    stdout=subprocess.PIPE, universal_newlines=True)
+        items = proc2.communicate()[0].split('\n')
 
         def callback(i):
             if i == -1:
                     return
             item = items[i]
-            #self.view.run_command("insert", {"characters": item})
-            self.view.run_command("notmuchedit", {"text": item.rstrip('\n')})
-            print(item)
-            #self.view.insert(edit, self.view.sel()[0].begin(), item)
+            self.view.run_command("notmuch_edit", {"text": item.rstrip('\n')})
 
         self.view.window().show_quick_panel(items, callback)
 
 
-class NotmucheditCommand(sublime_plugin.TextCommand):
-    # https://stackoverflow.com/questions/20466014/save-the-edit-when-running-a-sublime-text-3-plugin
-    # we need to run a second process to pass the result from the search to, else the 'edit' magic
-    # has disappeared by the time we want to insert
+class NotmuchEditCommand(sublime_plugin.TextCommand):
+    """
+    https://stackoverflow.com/questions/20466014/save-the-edit-when-running-a-sublime-text-3-plugin
+    we need to run a second process to pass the result from the search to, else the 'edit' magic
+    has disappeared by the time we want to insert
+    """
 
     def run(self, edit, text):
         sel = self.view.sel()
