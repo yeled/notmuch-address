@@ -1,4 +1,4 @@
 [{
 	"caption": "Notmuchaddress",
-	"command": "notmuchaddress"
+	"command": "prompt_notmuch_address"
 }]
