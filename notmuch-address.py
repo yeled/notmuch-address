@@ -24,6 +24,9 @@ class NotmuchaddressCommand(sublime_plugin.TextCommand):
 
 
 class NotmucheditCommand(sublime_plugin.TextCommand):
+    # https://stackoverflow.com/questions/20466014/save-the-edit-when-running-a-sublime-text-3-plugin
+    # we need to run a second process to pass the result from the search to, else the 'edit' magic
+    # has disappeared by the time we want to insert
 
     def run(self, edit, text):
         sel = self.view.sel()
