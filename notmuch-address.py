@@ -6,10 +6,10 @@ class NotmuchaddressCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         text = None
-        args = ['/usr/local/bin/notmuch', 'address', 'email.com']
 
-        proc = subprocess.Popen(args, stdout=subprocess.PIPE, universal_newlines=True)
+        proc = subprocess.Popen(['/usr/local/bin/notmuch', 'address', '--deduplicate=address', 'email.com'], stdout=subprocess.PIPE, universal_newlines=True)
         items = proc.stdout.readlines()
+        print(items)
 
         def callback(i):
             if i == -1:
