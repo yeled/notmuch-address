@@ -1,4 +1,4 @@
 [{
-	"caption": "Notmuchaddress",
+	"caption": "Notmuch: Insert address",
 	"command": "prompt_notmuch_address"
 }]
