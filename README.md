@@ -8,7 +8,7 @@ We take the query from the prompt at the bottom of your window and then pass tha
 
 It filters (with `grep`) because otherwise it will return up to thousands of recepients when you probably wanted something that actually matched your query.
 
-A GIF might explain better:
+A GIF might explain better. Here is astroidmail forwarding a mail.
 
-![](http://spodder-com-photo.s3.amazonaws.com/screenshots/screencast_2017-06-11_msy0k.gif)
+![](screencast.gif)
 
